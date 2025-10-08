@@ -34,7 +34,7 @@ export default function Home() {
     return (
         <div className=" bg-gray-900 min-h-screen text-white">
             {/* Herro banner */}
-            {movies.length > 0 && <HeroBanner movie ={movies[2]}/>}
+            {movies.length > 0 && <HeroBanner movie ={movies[3]}/>}
 
             {/* Section movie list ada padding */}
   <div className="p-6">
