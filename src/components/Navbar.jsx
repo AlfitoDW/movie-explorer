@@ -1,162 +1,211 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaBell, FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaBell, FaSearch, FaChevronDown, FaTimes } from "react-icons/fa";
+import {toast} from "react-hot-toast";
 
-export default function Navbar() {
+export default function Navbar({ setSearchMode, setSearchQuery }) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [localQuery, setLocalQuery] = useState("");
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
 
-  const exploreRef = useRef(null);
   const profileRef = useRef(null);
-  const exploreTimerRef = useRef(null);
-  const profileTimerRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const exploreRef = useRef(null);
+  const profileCloseTimer = useRef(null);
+  const exploreCloseTimer = useRef(null);
+
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // tutup dropdown kalau klik di luar
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setIsProfileOpen(false);
-        clearTimeout(profileTimerRef.current);
+      }
+      if (
+        isSearchActive &&
+        searchInputRef.current &&
+        !searchInputRef.current.contains(e.target)
+      ) {
+        setIsSearchActive(false);
       }
       if (exploreRef.current && !exploreRef.current.contains(e.target)) {
         setIsExploreOpen(false);
-        clearTimeout(exploreTimerRef.current);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isSearchActive, isExploreOpen]);
 
-  // PROFILE: hover open, hover leave delay, click toggle (for mobile)
-  const openProfile = () => {
-    clearTimeout(profileTimerRef.current);
-    setIsProfileOpen(true);
-  };
-  const scheduleCloseProfile = () => {
-    clearTimeout(profileTimerRef.current);
-    profileTimerRef.current = setTimeout(() => setIsProfileOpen(false), 150);
-  };
-  const toggleProfileClick = (e) => {
-    e.preventDefault();
-    clearTimeout(profileTimerRef.current);
-    setIsProfileOpen((v) => !v);
+  const submitSearch = () => {
+    setSearchQuery(localQuery);
+    setSearchMode(true);
+    setIsSearchActive(false);
   };
 
-  // EXPLORE (mobile): same pattern
-  const openExplore = () => {
-    clearTimeout(exploreTimerRef.current);
+  const handleExploreMouseEnter = () => {
+    clearTimeout(exploreCloseTimer.current);
     setIsExploreOpen(true);
   };
-  const scheduleCloseExplore = () => {
-    clearTimeout(exploreTimerRef.current);
-    exploreTimerRef.current = setTimeout(() => setIsExploreOpen(false), 150);
+  const handleExploreMouseLeave = () => {
+    exploreCloseTimer.current = setTimeout(() => {
+      setIsExploreOpen(false);
+    }, 200);
   };
-  const toggleExploreClick = (e) => {
-    e.preventDefault();
-    clearTimeout(exploreTimerRef.current);
-    setIsExploreOpen((v) => !v);
+
+  const handleProfileMouseEnter = () => {
+    clearTimeout(profileCloseTimer.current);
+    setIsProfileOpen(true);
+  };
+  const handleProfileMouseLeave = () => {
+    profileCloseTimer.current = setTimeout(() => {
+      setIsProfileOpen(false);
+    }, 200);
   };
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${
-        isScrolled ? "bg-black/90 backdrop-blur shadow-md" : "bg-gradient-to-b from-black/60 via-black/30 to-transparent"
+        isScrolled
+          ? "bg-black/90 backdrop-blur shadow-md"
+          : "bg-gradient-to-b from-black/60 via-black/30 to-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 text-white">
-        {/* LEFT: logo + links */}
-        <div className="flex items-center space-x-8">
-          <Link to="/" className="text-2xl font-bold tracking-wide">
-            <span className="text-red-600">ICLIX</span>
-          </Link>
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 py-3 text-white">
+        {/* Logo */}
+        <Link
+          to="/"
+          onClick={() => {
+            setSearchMode(false);
+            setSearchQuery("");
+          }}
+          className="text-2xl font-bold tracking-wide mr-8"
+        >
+          <span className="text-red-600">ICLIX</span>
+        </Link>
 
-          {/* desktop links */}
-          <div className="hidden md:flex space-x-6 text-sm font-medium">
-            <Link
-              to="/"
-              className={`hover:text-red-500 transition ${
-                location.pathname === "/" ? "text-red-500" : ""
-              }`}
-            >
-              Home
-            </Link>
-            <Link
-              to="/favorites"
-              className={`hover:text-red-500 transition ${
-                location.pathname === "/favorites" ? "text-red-500" : ""
-              }`}
-            >
-              Favorites
-            </Link>
-          </div>
-
-          {/* mobile Explore */}
-          <div
-            className="relative md:hidden"
-            ref={exploreRef}
-            onMouseEnter={openExplore}
-            onMouseLeave={scheduleCloseExplore}
+        {/* Desktop Nav Links */}
+        <div className="hidden md:flex space-x-8 text-sm font-medium">
+          <Link
+            to="/"
+            onClick={() => {
+              setSearchMode(false);
+              setSearchQuery("");
+            }}
+            className={`hover:text-red-500 transition ${
+              location.pathname === "/" ? "text-red-500" : ""
+            }`}
           >
-            <button
-              onClick={toggleExploreClick}
-              className="flex items-center text-sm font-medium hover:text-red-500 transition"
-            >
-              Explore{" "}
-              <FaChevronDown
-                className={`ml-1 text-xs transition-transform ${
-                  isExploreOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-
-            {isExploreOpen && (
-              <div className="absolute left-0 mt-2 bg-black/90 border border-gray-700 rounded-lg w-32 text-sm py-2 animate-fade-in">
-                <Link
-                  to="/"
-                  onClick={() => setIsExploreOpen(false)}
-                  className="block px-4 py-2 hover:bg-gray-800 transition"
-                >
-                  Home
-                </Link>
-                <hr className="border-gray-700 my-1" />
-                <Link
-                  to="/favorites"
-                  onClick={() => setIsExploreOpen(false)}
-                  className="block px-4 py-2 hover:bg-gray-800 transition"
-                >
-                  Favorites
-                </Link>
-              </div>
-            )}
-          </div>
+            Home
+          </Link>
+          <Link
+            to="/favorites"
+            className={`hover:text-red-500 transition ${
+              location.pathname === "/favorites" ? "text-red-500" : ""
+            }`}
+          >
+            Favorites
+          </Link>
         </div>
 
-        {/* RIGHT: icons + profile (IMPORTANT: profile handlers only on profile wrapper) */}
-        <div className="flex items-center space-x-4">
-          <Link to="/search">
-            <FaSearch className="text-lg text-gray-300 hover:text-white transition cursor-pointer" />
-          </Link>
+        {/* Explore dropdown mobile */}
+        <div
+          className="relative md:hidden ml-4"
+          ref={exploreRef}
+          onMouseEnter={handleExploreMouseEnter}
+          onMouseLeave={handleExploreMouseLeave}
+        >
+          <button className="flex items-center text-sm font-medium hover:text-red-500 transition">
+            Explore <FaChevronDown className={isExploreOpen ? "rotate-180 mx-2 text-xs transition-transform duration-300" : "mx-2 text-xs transition-transform duration-300"} />
+          </button>
+          {isExploreOpen && (
+            <div className="absolute left-0 mt-2 bg-black/90 border border-gray-700 rounded-lg w-32 text-sm py-2 animate-fade-in">
+              <Link
+                to="/"
+                onClick={() => {
+                  setSearchMode(false);
+                  setSearchQuery("");
+                  setIsExploreOpen(false);
+                }}
+                className="block px-4 py-2 hover:bg-gray-800 transition"
+              >
+                Home
+              </Link>
+              <hr className="border-gray-700 my-1" />
+              <Link
+                to="/favorites"
+                onClick={() => setIsExploreOpen(false)}
+                className="block px-4 py-2 hover:bg-gray-800 transition"
+              >
+                Favorites
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Right: search / notif / profil */}
+        <div className="flex items-center space-x-3 md:space-x-4">
+          <div className="relative" ref={searchInputRef}>
+            {isSearchActive ? (
+              <div className="search-input-slide flex items-center bg-black/70 border border-gray-600 rounded-full pl-3 pr-2 h-9 transition-all duration-300">
+                <FaSearch className="text-gray-400 mr-2 text-sm" />
+                <input
+                  type="text"
+                  value={localQuery}
+                  onChange={(e) => setLocalQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      submitSearch();
+                    }
+                  }}
+                  autoFocus
+                  placeholder="Search..."
+                  className="bg-transparent text-sm text-white placeholder-gray-400 outline-none w-36 md:w-48"
+                />
+                <button
+                  onClick={() => {
+                    setIsSearchActive(false);
+                    setLocalQuery("");
+                  }}
+                  className="text-gray-400 hover:text-white ml-1 flex items-center"
+                >
+                  <FaTimes size={13} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsSearchActive(true);
+                  setLocalQuery("");
+                }}
+                className="flex items-center justify-center text-lg text-gray-300 hover:text-white transition cursor-pointer h-9 w-9"
+              >
+                <FaSearch />
+              </button>
+            )}
+          </div>
 
           <FaBell className="text-lg text-gray-300 hover:text-white transition cursor-pointer" />
 
-          {/* PROFILE WRAPPER: hover on this wrapper only */}
           <div
             className="relative"
             ref={profileRef}
-            onMouseEnter={openProfile}
-            onMouseLeave={scheduleCloseProfile}
+            onMouseEnter={handleProfileMouseEnter}
+            onMouseLeave={handleProfileMouseLeave}
           >
             <button
-              onClick={toggleProfileClick}
               className="flex items-center cursor-pointer space-x-1"
+              onClick={() => setIsProfileOpen((v) => !v)}
             >
               <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-500">
                 <img
@@ -171,7 +220,6 @@ export default function Navbar() {
                 }`}
               />
             </button>
-
             {isProfileOpen && (
               <div className="absolute right-0 top-10 bg-black/90 text-sm rounded-lg w-40 py-2 border border-gray-700 animate-fade-in">
                 <Link to="/profile" className="block px-4 py-2 hover:bg-gray-800 transition">
@@ -182,8 +230,11 @@ export default function Navbar() {
                 </Link>
                 <hr className="border-gray-700 my-1" />
                 <button
-                  onClick={() => alert("Logged out!")}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    toast("Logged out!");
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg_gray-800 transition"
                 >
                   Logout
                 </button>
