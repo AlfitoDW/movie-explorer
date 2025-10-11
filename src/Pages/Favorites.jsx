@@ -44,7 +44,7 @@ export default function Favorites() {
                 </div>
               </Link>
 
-              {/* ❌ Tombol hapus muncul hanya pas hover */}
+              
               <button
                 onClick={() => handleRemoveFavorite(movie.id)}
                 className="absolute top-2 right-2 text-white text-xl bg-black bg-opacity-50 rounded-full p-1
