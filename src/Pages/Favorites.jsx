@@ -17,7 +17,7 @@ export default function Favorites() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen text-white p-6">
+    <div className="bg-[#141414] min-h-screen text-white p-6">
       <h1 className="text-3xl font-bold mb-6 mt-9 flex items-center gap-2">
         <FaHeart className="text-red-500" /> Your Favorites
       </h1>

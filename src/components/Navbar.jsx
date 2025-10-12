@@ -8,8 +8,26 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [localQuery, setLocalQuery] = useState("");
-  const [isExploreOpen, setIsExploreOpen] = useState(false);
-
+  const [isExploreOpen, setIsExploreOpen] = useState(false);  
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: "New Movie : The Creator",
+      description: "Now streaming on ICLIX",
+      time: "2h ago",
+      thumbnail :"https://image.tmdb.org/t/p/w500/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
+    },
+    {
+      id: 2,
+      title: "Top 10 This Week",
+      description: "Don't miss trending movies now!",
+      time: "5h ago",
+      thumbnail: "https://image.tmdb.org/t/p/w500/8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg",
+    },
+  ]);
+  
+  const notifRef = useRef(null);
   const profileRef = useRef(null);
   const searchInputRef = useRef(null);
   const exploreRef = useRef(null);
@@ -39,10 +57,13 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
       if (exploreRef.current && !exploreRef.current.contains(e.target)) {
         setIsExploreOpen(false);
       }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+      setIsNotifOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isSearchActive, isExploreOpen]);
+  }, [isSearchActive, isExploreOpen,isNotifOpen]);
 
   const submitSearch = () => {
     setSearchQuery(localQuery);
@@ -125,8 +146,9 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
           <button className="flex items-center text-sm font-medium hover:text-red-500 transition">
             Explore <FaChevronDown className={isExploreOpen ? "rotate-180 mx-2 text-xs transition-transform duration-300" : "mx-2 text-xs transition-transform duration-300"} />
           </button>
-          {isExploreOpen && (
-            <div className="absolute left-0 mt-2 bg-black/90 border border-gray-700 rounded-lg w-32 text-sm py-2 animate-fade-in">
+            <div className={`absolute left-0 mt-2 bg-black/90 border border-gray-700 rounded-lg w-32 text-sm py-2 transition-all duration-200 ease-in-out transform
+              ${isExploreOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-3 invisible"}`}
+            >
               <Link
                 to="/"
                 onClick={() => {
@@ -147,7 +169,6 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
                 Favorites
               </Link>
             </div>
-          )}
         </div>
 
         {/* Spacer */}
@@ -195,8 +216,64 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
             )}
           </div>
 
-          <FaBell className="text-lg text-gray-300 hover:text-white transition cursor-pointer" />
+          {/* 🔔 Notifikasi Dropdown */}
+          <div
+            className="relative"
+            ref={notifRef}
+            onMouseEnter={() => setIsNotifOpen(true)}
+            onMouseLeave={() => setIsNotifOpen(false)}
+          >
+            <button
+              className="relative flex items-center justify-center text-lg text-gray-300 hover:text-white transition cursor-pointer h-9 w-9"
+            >
+              <FaBell />
+              {/* 🔴 Indikator notif */}
+              {notifications.length > 0 && (
+                <span className="absolute top-1 right-1 bg-red-600 rounded-full w-2.5 h-2.5 border border-black"></span>
+              )}
+            </button>
 
+            {/* 🔽 Dropdown */}
+            <div
+              className={`absolute right-0 top-10 bg-black/90 border border-gray-700 rounded-lg w-80 max-h-96 overflow-y-auto shadow-xl transition-all duration-300 ease-in-out transform origin-top ${
+                isNotifOpen
+                  ? "opacity-100 translate-y-0 visible"
+                  : "opacity-0 -translate-y-2 invisible"
+              }`}
+            >
+              <p className="px-4 py-2 text-gray-400 text-sm border-b border-gray-700">
+                Notifikasi Terbaru
+              </p>
+
+              {notifications.length === 0 ? (
+                <p className="px-4 py-3 text-gray-500 text-sm text-center">
+                  Tidak ada notifikasi.
+                </p>
+              ) : (
+                notifications.map((notif) => (
+                  <div
+                    key={notif.id}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-800/70 transition"
+                  >
+                    <img
+                      src={notif.thumbnail}
+                      alt={notif.title}
+                      className="w-12 h-12 rounded-md object-cover"
+                    />
+                    <div className="flex flex-col text-sm">
+                      <p className="text-white font-medium leading-tight">
+                        {notif.title}
+                      </p>
+                      <p className="text-gray-400 truncate max-w-[220px] text-xs">
+                        {notif.description}
+                      </p>
+                      <span className="text-gray-500 text-xs mt-1">{notif.time}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
           <div
             className="relative"
             ref={profileRef}
@@ -220,8 +297,9 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
                 }`}
               />
             </button>
-            {isProfileOpen && (
-              <div className="absolute right-0 top-10 bg-black/90 text-sm rounded-lg w-40 py-2 border border-gray-700 animate-fade-in">
+              <div className={`absolute right-0 top-10 bg-black/90 text-sm rounded-lg w-40 py-2 border border-gray-700 transition-all duration-200 ease-in-out transform
+                ${isProfileOpen ? "opacity-100 traslate-y-0 visible" : "opacity-0 -translate-y-3 invisible"}`} 
+                >
                 <Link to="/profile" className="block px-4 py-2 hover:bg-gray-800 transition">
                   Profile
                 </Link>
@@ -239,7 +317,6 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
                   Logout
                 </button>
               </div>
-            )}
           </div>
         </div>
       </div>

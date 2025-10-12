@@ -63,7 +63,7 @@ export default function Home({ searchMode, searchQuery, setSearchQuery, setSearc
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen text-white">
+    <div className="min-h-screen text-white bg-[#141414]">
   {/* HeroBanner tetap muncul */}
   {movies.length > 0 && <HeroBanner movie={movies[0]} />}
 

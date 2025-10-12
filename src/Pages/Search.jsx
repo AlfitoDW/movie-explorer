@@ -69,7 +69,7 @@ export default function Search() {
 
       {/* Hasil Pencarian */}
       {!loading && results.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 overflow-hidden">
           {results.map((movie) => (
             // 🔻 Tambah class group & relative
             <div key={movie.id} className="relative group">
