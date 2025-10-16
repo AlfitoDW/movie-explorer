@@ -27,14 +27,15 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
     },
   ]);
   
+  const location = useLocation();
   const notifRef = useRef(null);
   const profileRef = useRef(null);
   const searchInputRef = useRef(null);
   const exploreRef = useRef(null);
   const profileCloseTimer = useRef(null);
   const exploreCloseTimer = useRef(null);
-
-  const location = useLocation();
+  const isDetailPage = location.pathname.startsWith("/movie");
+  
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -93,11 +94,15 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${
-        isScrolled
-          ? "bg-black/90 backdrop-blur shadow-md"
-          : "bg-gradient-to-b from-black/60 via-black/30 to-transparent"
-      }`}
+     className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${
+    isDetailPage
+      ? isScrolled
+        ? "bg-black/80 backdrop-blur-md" // kalau discroll, muncul gelap dikit
+        : "bg-transparent" // transparan penuh di awal
+      : isScrolled
+      ? "bg-black/90 backdrop-blur shadow-md"
+      : "bg-gradient-to-b from-black/60 via-black/30 to-transparent"
+  }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 py-3 text-white">
         {/* Logo */}
