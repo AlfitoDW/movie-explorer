@@ -5,6 +5,7 @@ import Home from "./Pages/Home";
 import MovieDetail from "./Pages/MovieDetail"
 import Favorites from "./Pages/Favorites";
 import { Toaster } from "react-hot-toast";
+import FilmPage from "./Pages/FIlmPage";
 
 export default function App() {
 
@@ -33,6 +34,7 @@ export default function App() {
         />
         <Route path="/movie/:id" element = {<MovieDetail />} />
         <Route path="/favorites" element = {<Favorites />} />
+        <Route path="/film" element = {<FilmPage />} />
       </Routes>
     </Router>
   )

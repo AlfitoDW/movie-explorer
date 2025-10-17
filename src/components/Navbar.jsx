@@ -139,6 +139,14 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
           >
             Favorites
           </Link>
+          <Link
+            to= "/film"
+            className={`hover:text-red-500 transition ${
+              location.pathname === "/film" ? "text-red-500" : ""
+            }`}
+            >
+              Film
+            </Link>
         </div>
 
         {/* Explore dropdown mobile */}
@@ -172,6 +180,14 @@ export default function Navbar({ setSearchMode, setSearchQuery }) {
                 className="block px-4 py-2 hover:bg-gray-800 transition"
               >
                 Favorites
+              </Link>
+              <hr className="border-gray-700 my-1" />
+              <Link
+                to="/film"
+                onClick={() => setIsExploreOpen (false)}
+                className="block px-4 py-2 hover:bg-gray-800 transition"
+              >
+                Film
               </Link>
             </div>
         </div>
