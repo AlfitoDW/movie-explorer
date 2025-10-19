@@ -5,7 +5,7 @@ import Home from "./Pages/Home";
 import MovieDetail from "./Pages/MovieDetail"
 import Favorites from "./Pages/Favorites";
 import { Toaster } from "react-hot-toast";
-import FilmPage from "./Pages/FIlmPage";
+import FilmPage from "./Pages/FilmPage";
 
 export default function App() {
 
