@@ -7,6 +7,8 @@ export default function Search() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query) return;
@@ -14,7 +16,7 @@ export default function Search() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=c0c6d3c7ed3419a6658247e0c4fa6644&language=en-US&query=${query}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&query=${query}`
       );
       setResults(res.data.results);
     } catch (err) {

@@ -7,7 +7,7 @@ export default function MovieCard({ movie }) {
 
   return (
     <div
-      className="relative min-w-[160px] cursor-pointer group"
+      className="relative min-w-[160px] cursor-pointer group overflow-hidden"
       onClick={() => navigate(`/movie/${movie.id}`)}
     >
       {/* Poster */}

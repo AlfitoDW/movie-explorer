@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from "react";
 import MovieCarousel from "../components/MovieCarousel";
 
-const API_KEY = "c0c6d3c7ed3419a6658247e0c4fa6644";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function FilmPage() {
