@@ -3,7 +3,6 @@
 **Movie Explorer** adalah aplikasi berbasis React yang memungkinkan pengguna menjelajahi film populer, mencari film, melihat detail, dan menambahkan film ke daftar favorit mereka.  
 Aplikasi ini terinspirasi oleh tampilan **Netflix UI** dengan fitur **carousel genre** dan sistem **favorite berbasis localStorage** tanpa perlu login.
 
-🚀 **Live Demo:** [https://iclix.vercel.app](https://iclix.vercel.app)
 
 ---
 
