@@ -1,16 +1,52 @@
-# React + Vite
+# 🎬 Movie Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Movie Explorer** adalah aplikasi berbasis React yang memungkinkan pengguna menjelajahi film populer, mencari film, melihat detail, dan menambahkan film ke daftar favorit mereka.  
+Aplikasi ini terinspirasi oleh tampilan **Netflix UI** dengan fitur **carousel genre** dan sistem **favorite berbasis localStorage** tanpa perlu login.
 
-Currently, two official plugins are available:
+🚀 **Live Demo:** [https://iclix.vercel.app](https://iclix.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🧩 Fitur Utama
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔥 **Film Populer:** Menampilkan daftar film trending dari TMDB API.
+- 🎞️ **Detail Film:** Setiap film memiliki halaman detail yang memuat sinopsis, rating, dan poster.
+- 🎠 **Carousel Genre:** Film dikelompokkan berdasarkan genre, bisa digeser horizontal seperti Netflix.
+- ❤️ **Daftar Favorit:** Simpan film favorit langsung ke localStorage (tanpa akun/login).
+- 🔍 **Pencarian Film:** Cari film berdasarkan judul.
+- 📱 **Responsive Design:** Tampilan nyaman untuk mobile dan desktop.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🧱 Struktur Halaman
+
+| Halaman | Deskripsi |
+|----------|------------|
+| `/` | Menampilkan film populer dan banner utama |
+| `/movie/:id` | Menampilkan detail film |
+| `/favorites` | Menampilkan daftar film yang disimpan ke favorit |
+| `/film` | Menampilkan daftar film berdasarkan genre dengan carousel horizontal |
+
+---
+
+## ⚙️ Teknologi yang Digunakan
+
+| Kategori | Teknologi |
+|-----------|------------|
+| Frontend | **React + Vite** |
+| Styling | **Tailwind CSS** |
+| Routing | **React Router DOM** |
+| API | **The Movie Database (TMDB)** |
+| Icon | **React Icons** |
+| Toast Notification | **React Hot Toast** |
+| Deployment | **Vercel** |
+
+---
+
+## 🔑 API Configuration
+
+Project ini menggunakan API dari [The Movie Database (TMDB)](https://www.themoviedb.org/).
+
+Buat file `.env` di root project, lalu tambahkan API key kamu:
+```bash
+VITE_TMDB_API_KEY=your_api_key_here
